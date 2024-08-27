@@ -5,8 +5,16 @@ import type {
   Handler,
 } from 'aws-lambda';
 import aws from 'aws-sdk';
+import local from './config.local';
 
-const dynamodb = new aws.DynamoDB.DocumentClient();
+const dynamodb = new aws.DynamoDB.DocumentClient({
+  region: 'localhost',
+  endpoint: 'http://0.0.0.0:8000',
+  credentials: {
+    accessKeyId: local.ACCESS_KEY_ID,
+    secretAccessKey: local.SECRET_ACCESS_KEY,
+  },
+});
 
 const getUsers: Handler = async (
   event: APIGatewayProxyEventV2,
@@ -15,7 +23,7 @@ const getUsers: Handler = async (
   const params = {
     ExpressionAttributeValues: { ':pk': '1' },
     KeyConditionExpression: 'pk = :pk',
-    TableName: 'crud-serverless-users-table',
+    TableName: 'usersTable',
   };
 
   let res = await dynamodb.query(params).promise();

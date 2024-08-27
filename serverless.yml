@@ -7,6 +7,18 @@ provider:
 plugins:
   - serverless-offline
   - serverless-esbuild
+  - serverless-dynamodb
+
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      docker: false
+      inMemory: true
+      migrate: true
+      convertEmptyValues: true
 
 functions:
   get-users:
@@ -15,3 +27,19 @@ functions:
       - http:
           path: users
           method: GET
+
+resources:
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usersTable
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
