@@ -1,0 +1,17 @@
+service: crud-serverless-users
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+
+plugins:
+  - serverless-offline
+  - serverless-esbuild
+
+functions:
+  get-users:
+    handler: handler.getUsers
+    events:
+      - http:
+          path: users
+          method: GET
