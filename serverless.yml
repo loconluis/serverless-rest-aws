@@ -51,6 +51,12 @@ functions:
       - http:
           path: users/{id}
           method: PATCH
+  delete-users:
+    handler: deleteUsers/handler.deleteUsers
+    events:
+      - http:
+          path: users/{id}
+          method: DELETE
 
 resources:
   Resources:
