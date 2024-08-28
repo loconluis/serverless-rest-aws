@@ -45,6 +45,12 @@ functions:
       - http:
           path: users
           method: POST
+  update-users:
+    handler: updateUsers/handler.updateUsers
+    events:
+      - http:
+          path: users/{id}
+          method: PATCH
 
 resources:
   Resources:
