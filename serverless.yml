@@ -3,11 +3,23 @@ service: crud-serverless-users
 provider:
   name: aws
   runtime: nodejs20.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: 'dynamodb:*'
+          Resource: arn:aws:dynamodb:us-east-1:828045358523:table/usersTable
 
 plugins:
   - serverless-offline
   - serverless-esbuild
   - serverless-dynamodb
+
+package:
+  individually: true
+  patterns:
+    - '!.dynamodb'
+    - '!.node_modules'
 
 custom:
   dynamodb:
@@ -22,11 +34,17 @@ custom:
 
 functions:
   get-users:
-    handler: handler.getUsers
+    handler: getUsers/handler.getUsers
+    events:
+      - http:
+          path: users/{id}
+          method: GET
+  create-users:
+    handler: createUsers/handler.createUsers
     events:
       - http:
           path: users
-          method: GET
+          method: POST
 
 resources:
   Resources:
